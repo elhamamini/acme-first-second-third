@@ -22,15 +22,11 @@ const list = document.getElementById("lists");
 
 list.addEventListener("click", ev => {
   if (ev.target.tagName === "DIV") {
-    const idx1 = Number(ev.target.getAttribute("data-idx"));
-    const idx2 = Number(ev.target.id);
-    const idx = idx1 + idx2;
-
-    const user = users[idx];
+    const id = Number(ev.target.id);
+    const user = users[id];
     user.selected = !user.selected;
   }
   if ((ev.target.tagName = "BUTTON")) {
-    // if (ev.target.className === "left") {
     const redOnes = [...ev.target.parentNode.lastElementChild.children].filter(
       child => {
         if (child.className === "user selected") {
@@ -40,12 +36,11 @@ list.addEventListener("click", ev => {
     );
     if (redOnes.length > 0) {
       redOnes.forEach(child => {
-        const childId = Number(child.getAttribute("data-idx"));
-        const parentId = Number(child.id);
+        const parentId = Number(child.getAttribute("data-idx"));
 
-        const indx = childId + parentId;
+        const idx = Number(child.id);
 
-        const targetChild = users[indx];
+        const targetChild = users[idx];
         if (ev.target.className === "left") {
           targetChild.slot = slots[parentId - 1];
         } else {
@@ -60,20 +55,14 @@ list.addEventListener("click", ev => {
 
 const render = () => {
   for (let i = 0; i < slots.length; i++) {
-    const html = users
-      .filter(user => {
-        if (slots[i] === user.slot) {
-          return user;
-        }
-      })
-      .map((user, idx) => {
-        // let num = slots.indexOf(user.slot);
-        return `<div id='${slots.indexOf(user.slot)}' class='user ${
-          user.selected ? "selected" : ""
-        }'  data-idx='${idx}'>${user.name}</div>`;
-      })
-      .join(" ,");
-    console.log(html);
+    let html = "";
+    users.forEach((user, id) => {
+      if (slots[i] === user.slot) {
+        html += `<div id='${id}' data-idx='${slots.indexOf(
+          user.slot
+        )}' class='user ${user.selected ? "selected" : ""}'>${user.name}</div>`;
+      }
+    });
 
     document.getElementsByClassName(slots[i])[0].innerHTML = html;
   }
